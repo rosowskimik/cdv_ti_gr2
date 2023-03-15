@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '${APP_PORT:-80}:80'
+    volumes:
+      - ..:/workspaces:cached
+    env_file:
+      - .env
+    command: sleep infinity
+    networks:
+      - main
+
+  mariadb:
+    image: mariadb:10
+    restart: unless-stopped
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: '${DB_PASS}'
+      MYSQL_DATABASE: '${DB_NAME}'
+      MYSQL_USER: '${DB_USER}'
+      MYSQL_PASSWORD: '${DB_PASS}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks:
+      - admin
+      - main
+    # Add "forwardPorts": ["3306"] to **devcontainer.json** to forward MariaDB locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  phpmyadmin:
+    image: 'phpmyadmin:apache'
+    ports:
+      - '${FORWARD_PHPMYADMIN_PORT:-8080}:80'
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: '${DB_HOST}'
+      PMA_USER: '${DB_USER}'
+      PMA_PASSWORD: '${DB_PASS}'
+      MYSQL_ROOT_PASSWORD: '${DB_PASS}'
+    networks:
+      - admin
+
+networks:
+  admin:
+  main:
+
+volumes:
+  mariadb-data:
