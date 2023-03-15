@@ -22,7 +22,10 @@
 				"bradlc.vscode-tailwindcss",
 				"ecmel.vscode-html-css",
 				"bmewburn.vscode-intelephense-client",
-				"kokororin.vscode-phpfmt"
+				"kokororin.vscode-phpfmt",
+				"RobertOstermann.inline-parameters-extended",
+				"mtxr.sqltools",
+				"mtxr.sqltools-driver-mysql"
 			]
 		}
 	},
